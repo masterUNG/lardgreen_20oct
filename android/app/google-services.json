@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1087524234187",
+    "project_id": "lardgreen-d7740",
+    "storage_bucket": "lardgreen-d7740.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1087524234187:android:5860d68be75c3a4f92cc4e",
+        "android_client_info": {
+          "package_name": "com.wanpracha.lardgreen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1087524234187-lfleb31oku10dgghc5lne87c6uior41a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBym_tAMCGZea3ipA5pMYvMhyvBmxxMQmA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1087524234187-lfleb31oku10dgghc5lne87c6uior41a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
