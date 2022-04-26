@@ -5,6 +5,9 @@ class MyConstant {
   static Color dark = const Color.fromARGB(255, 13, 51, 87); //corlor text
   static Color light = const Color.fromARGB(255, 136, 201, 138);
 
+  static String routeMainHome = '/mainHome';
+  static String routeHomePage = '/homePage';
+
   TextStyle h1Style() => TextStyle(
         color: dark,
         fontSize: 36,
