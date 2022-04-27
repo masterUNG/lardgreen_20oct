@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lardgreen/models/product_model.dart';
 import 'package:lardgreen/states/add_new_product.dart';
 import 'package:lardgreen/utility/my_constant.dart';
 import 'package:lardgreen/widgets/show_button.dart';
@@ -25,6 +26,7 @@ class _ProductSellerState extends State<ProductSeller> {
   bool load = true;
   String? docIdUser;
   bool? haveProduct;
+  var productModels = <ProductModel>[];
 
   @override
   void initState() {
@@ -34,6 +36,9 @@ class _ProductSellerState extends State<ProductSeller> {
   }
 
   Future<void> readProductData() async {
+    if (productModels.isNotEmpty) {
+      productModels.clear();
+    }
     await FirebaseFirestore.instance
         .collection('user')
         .doc(docIdUser)
@@ -47,6 +52,10 @@ class _ProductSellerState extends State<ProductSeller> {
         haveProduct = false;
       } else {
         haveProduct = true;
+        for (var item in value.docs) {
+          ProductModel productModel = ProductModel.fromMap(item.data());
+          productModels.add(productModel);
+        }
       }
 
       setState(() {});
@@ -68,15 +77,75 @@ class _ProductSellerState extends State<ProductSeller> {
       body: load
           ? const ShowProgress()
           : haveProduct!
-              ? ShowTitle(
-                  title: 'จัดการสินค้า',
-                )
+              ? newContent()
               : Center(
                   child: ShowText(
                     lable: 'ยังไม่มีสินค้า',
                     textStyle: MyConstant().h1Style(),
                   ),
                 ),
+    );
+  }
+
+  Widget newContent() {
+    return SingleChildScrollView(
+      child: LayoutBuilder(builder: (context, constarints) {
+        return Column(
+          children: [
+            ShowTitle(title: 'จัดการสินค้า'),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: ScrollPhysics(),
+              itemCount: productModels.length,
+              itemBuilder: (context, index) => Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: constarints.maxWidth * 0.5 - 8,
+                        height: 120,
+                        margin: EdgeInsets.all(8),
+                        child: Image.network(
+                          productModels[index].urlProduct,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        width: constarints.maxWidth * 0.5 - 8,
+                        height: 120,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ShowText(
+                              lable: productModels[index].name,
+                              textStyle: MyConstant().h2Style(),
+                            ),
+                            ShowText(
+                              lable:
+                                  "ราคา ${productModels[index].price.toString()} บาท/${productModels[index].unit}",
+                              textStyle: MyConstant().h3Style(),
+                            ),
+                            ShowText(
+                              lable:
+                                  "สต็อก ${productModels[index].stock.toString()} ${productModels[index].unit}",
+                              textStyle: MyConstant().h3Style(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    color: MyConstant.dark,
+                  )
+                ],
+              ),
+            )
+          ],
+        );
+      }),
     );
   }
 }

@@ -78,7 +78,13 @@ class _SellerServiceState extends State<SellerService> {
         child: Column(
           children: [
             UserAccountsDrawerHeader(
-              currentAccountPicture: userModle == null ? ShowImage(): Image.network(userModle!.urlAvatar!),
+              currentAccountPicture: userModle == null
+                  ? SizedBox(
+                      child: ShowImage(),
+                    )
+                  : userModle!.urlAvatar!.isEmpty
+                      ? const ShowImage(path: 'images/shop.png')
+                      : Image.network(userModle!.urlAvatar!),
               decoration:
                   BoxDecoration(color: MyConstant.light.withOpacity(0.5)),
               accountName: ShowText(
