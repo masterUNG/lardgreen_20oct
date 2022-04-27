@@ -10,6 +10,7 @@ class UserModle {
   final String status;
   final String token;
   final String typeUser;
+  final String? urlAvatar;
   UserModle({
     required this.address,
     required this.email,
@@ -19,6 +20,7 @@ class UserModle {
     required this.status,
     required this.token,
     required this.typeUser,
+     this.urlAvatar,
   });
 
   Map<String, dynamic> toMap() {
@@ -31,6 +33,7 @@ class UserModle {
       'status': status,
       'token': token,
       'typeUser': typeUser,
+      'urlAvatar': urlAvatar,
     };
   }
 
@@ -44,6 +47,7 @@ class UserModle {
       status: map['status'] as String,
       token: map['token'] as String,
       typeUser: map['typeUser'] as String,
+      urlAvatar: (map['urlAvatar'] ?? ''),
     );
   }
 

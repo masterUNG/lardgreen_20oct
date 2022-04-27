@@ -6,6 +6,7 @@ import 'package:lardgreen/states/order_seller.dart';
 import 'package:lardgreen/states/product_seller.dart';
 import 'package:lardgreen/states/profile_seller.dart';
 import 'package:lardgreen/utility/my_constant.dart';
+import 'package:lardgreen/widgets/show_image.dart';
 import 'package:lardgreen/widgets/show_menu.dart';
 import 'package:lardgreen/widgets/show_progress.dart';
 import 'package:lardgreen/widgets/show_text.dart';
@@ -23,7 +24,8 @@ class _SellerServiceState extends State<SellerService> {
   bool load = true;
 
   var widgets = <Widget>[];
-
+  var user = FirebaseAuth.instance.currentUser;
+  UserModle? userModle;
   int indexWidget = 0;
 
   @override
@@ -33,17 +35,28 @@ class _SellerServiceState extends State<SellerService> {
   }
 
   Future<void> findUser() async {
-    var user = FirebaseAuth.instance.currentUser;
     await FirebaseFirestore.instance
         .collection('user')
         .doc(user!.uid)
         .get()
         .then((value) {
-      UserModle userModle = UserModle.fromMap(value.data()!);
+      userModle = UserModle.fromMap(value.data()!);
       load = false;
-      widgets.add(OrderSeller(userModle: userModle));
-      widgets.add(ProfileSeller(userModle: userModle,));
-      widgets.add(ProductSeller());
+      widgets.add(
+        OrderSeller(
+          docIdUser: user!.uid,
+        ),
+      );
+      widgets.add(
+        ProfileSeller(
+          docIdUser: user!.uid,
+        ),
+      );
+      widgets.add(
+        ProductSeller(
+          docIdUser: user!.uid,
+        ),
+      );
       setState(() {});
     });
   }
@@ -64,7 +77,19 @@ class _SellerServiceState extends State<SellerService> {
       drawer: Drawer(
         child: Column(
           children: [
-            UserAccountsDrawerHeader(accountName: null, accountEmail: null),
+            UserAccountsDrawerHeader(
+              currentAccountPicture: userModle == null ? ShowImage(): Image.network(userModle!.urlAvatar!),
+              decoration:
+                  BoxDecoration(color: MyConstant.light.withOpacity(0.5)),
+              accountName: ShowText(
+                lable: userModle == null ? '' : userModle!.name,
+                textStyle: MyConstant().h2Style(),
+              ),
+              accountEmail: ShowText(
+                lable: userModle == null ? '' : userModle!.email,
+                textStyle: MyConstant().h3Style(),
+              ),
+            ),
             ShowMenu(
               title: 'รายการสั่งของ',
               subTitle: 'Order List',
@@ -82,6 +107,7 @@ class _SellerServiceState extends State<SellerService> {
               tapFunc: () {
                 indexWidget = 1;
                 Navigator.pop(context);
+
                 setState(() {});
               },
             ),
