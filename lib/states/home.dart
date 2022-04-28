@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:lardgreen/models/product_model.dart';
 import 'package:lardgreen/models/user_model.dart';
+import 'package:lardgreen/states/list_product_of_seller.dart';
 import 'package:lardgreen/utility/my_constant.dart';
 import 'package:lardgreen/widgets/show_image.dart';
 import 'package:lardgreen/widgets/show_progress.dart';
@@ -19,6 +20,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   var userModels = <UserModle>[];
   var productModels = <ProductModel>[];
+  var docIdUsers = <String>[];
   bool load = true;
 
   @override
@@ -45,6 +47,7 @@ class _HomeState extends State<Home> {
         i++;
 
         String docIdUser = item.id;
+        docIdUsers.add(docIdUser);
         await FirebaseFirestore.instance
             .collection('user')
             .doc(docIdUser)
@@ -76,32 +79,36 @@ class _HomeState extends State<Home> {
                 const ShowTitle(title: 'ร้านค้า :'),
                 newSellerGroup(),
                 const ShowTitle(title: 'สินค้าใหม่:'),
-                GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisSpacing: 8,
-                      childAspectRatio: 1,
-                      crossAxisSpacing: 8,
-                      crossAxisCount: 3),
-                  itemBuilder: (BuildContext context, int index) => Card(color: Color.fromARGB(255, 241, 90, 141).withOpacity(0.5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                            width: 80,
-                            height: 80,
-                            child:
-                                Image.network(productModels[index].urlProduct)),
-                        ShowText(lable: productModels[index].name),
-                      ],
-                    ),
-                  ),
-                  itemCount: productModels.length,
-                  shrinkWrap: true,
-                  physics: const ScrollPhysics(),
-                ),
+                newProductGroup(),
               ],
             );
     });
+  }
+
+  GridView newProductGroup() {
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          mainAxisSpacing: 8,
+          childAspectRatio: 1,
+          crossAxisSpacing: 8,
+          crossAxisCount: 3),
+      itemBuilder: (BuildContext context, int index) => Card(
+        color: Color.fromARGB(255, 241, 90, 141).withOpacity(0.5),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+                width: 80,
+                height: 80,
+                child: Image.network(productModels[index].urlProduct)),
+            ShowText(lable: productModels[index].name),
+          ],
+        ),
+      ),
+      itemCount: productModels.length,
+      shrinkWrap: true,
+      physics: const ScrollPhysics(),
+    );
   }
 
   GridView newSellerGroup() {
@@ -113,25 +120,36 @@ class _HomeState extends State<Home> {
         childAspectRatio: 1,
       ), //column to show
 
-      itemBuilder: (BuildContext context, int index) => Card(
-        color: Colors.lime,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 80,
-              height: 80,
-              child: userModels[index].urlAvatar!.isEmpty
-                  ? const ShowImage(
-                      path: 'images/shop.png',
-                    )
-                  : Image.network(
-                      userModels[index].urlAvatar!,
-                      fit: BoxFit.cover,
-                    ),
+      itemBuilder: (BuildContext context, int index) => InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ListProductOfSeller(
+                  docIdUser: docIdUsers[index], userModle: userModels[index]),
             ),
-            ShowText(lable: userModels[index].name),
-          ],
+          );
+        },
+        child: Card(
+          color: Colors.lime,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 80,
+                height: 80,
+                child: userModels[index].urlAvatar!.isEmpty
+                    ? const ShowImage(
+                        path: 'images/shop.png',
+                      )
+                    : Image.network(
+                        userModels[index].urlAvatar!,
+                        fit: BoxFit.cover,
+                      ),
+              ),
+              ShowText(lable: userModels[index].name),
+            ],
+          ),
         ),
       ),
       itemCount: userModels.length,
