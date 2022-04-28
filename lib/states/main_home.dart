@@ -6,7 +6,9 @@ import 'package:lardgreen/states/about_me.dart';
 import 'package:lardgreen/states/authen.dart';
 import 'package:lardgreen/states/helper.dart';
 import 'package:lardgreen/states/home.dart';
+import 'package:lardgreen/states/show_chart.dart';
 import 'package:lardgreen/utility/my_constant.dart';
+import 'package:lardgreen/widgets/show_icon_button.dart';
 import 'package:lardgreen/widgets/show_image.dart';
 import 'package:lardgreen/widgets/show_progress.dart';
 import 'package:lardgreen/widgets/show_signout.dart';
@@ -73,6 +75,17 @@ class _MainHomeState extends State<MainHome> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        actions: [
+          ShowIconButton(
+              iconData: Icons.shopping_cart_outlined,
+              pressFunc: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ShowChart(),
+                    ));
+              }),
+        ],
         elevation: 0,
         backgroundColor: Colors.white,
         foregroundColor: MyConstant.dark,

@@ -3,8 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:lardgreen/models/product_model.dart';
+import 'package:lardgreen/models/sqllite_model.dart';
 import 'package:lardgreen/models/user_model.dart';
 import 'package:lardgreen/utility/my_constant.dart';
+import 'package:lardgreen/utility/my_dialog.dart';
+import 'package:lardgreen/utility/sqllite_helper.dart';
 import 'package:lardgreen/widgets/show_button.dart';
 import 'package:lardgreen/widgets/show_form.dart';
 import 'package:lardgreen/widgets/show_text.dart';
@@ -14,6 +17,7 @@ class ShowDetailProduct extends StatefulWidget {
   final String docIdUser;
   final String docIdProduct;
   final ProductModel productModel;
+  
 
   const ShowDetailProduct({
     Key? key,
@@ -31,6 +35,8 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
   ProductModel? productModel;
   bool load = true;
   UserModle? userModle;
+  String? amount;
+  SQLiteModel? sQliteModel;
 
   @override
   void initState() {
@@ -86,21 +92,50 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
                   head: 'สต็อก',
                   value: '${productModel!.stock} ${productModel!.unit}'),
               newDetail(head: 'รายละเอียด', value: '${productModel!.detail}'),
-              Row(
-                children: [
-                  ShowTitle(title: 'จำนวนที่สั่ง :'),
-                  ShowForm(
-                      textInputType: TextInputType.number,
-                      label: 'จำนวนที่สั่ง',
-                      iconData: Icons.book,
-                      changeFunc: (String string) {}),
-                ],
-              ),
-              ShowButton(label: 'ใส่ตระกล้า', pressFunc: () {}),
+              newAmount(),
+              ShowButton(
+                  label: 'ใส่ตระกล้า',
+                  pressFunc: () {
+                    if (amount?.isEmpty ?? true) {
+                      MyDialog(context: context).normalDialog(
+                          title: 'ยังไม่มี จำนวนที่สั่ง ?',
+                          message: 'กรุณาใส่ จำนวนที่สั่งด้วย ครับ');
+                    } else if (int.parse(amount!) > productModel!.stock) {
+                      MyDialog(context: context).actionDialog(
+                          title: 'คุณสั่งของมากกว่า สต็อก ที่มี',
+                          message: 'รอติดต่อกลับจาก Admin ก่อน',
+                          label1: 'จอง',
+                          label2: 'ยกเลิก',
+                          presFunc1: () {
+                            Navigator.pop(context);
+                          },
+                          presFunc2: () {
+                            Navigator.pop(context);
+                          });
+                    } else {
+                      processAddChart();
+                    }
+                  }),
             ],
           ),
         );
       }),
+    );
+  }
+
+  Row newAmount() {
+    return Row(
+      children: [
+        ShowTitle(title: 'จำนวนที่สั่ง :'),
+        ShowForm(
+            width: 160,
+            textInputType: TextInputType.number,
+            label: 'จำนวนที่สั่ง',
+            iconData: Icons.book,
+            changeFunc: (String string) {
+              amount = string.trim();
+            }),
+      ],
     );
   }
 
@@ -118,5 +153,49 @@ class _ShowDetailProductState extends State<ShowDetailProduct> {
         ),
       ],
     );
+  }
+
+
+
+  Future<void> processAddChart() async {
+    SQLiteModel sqLiteModel = SQLiteModel(
+        docIdSeller: docIdUser!,
+        nameSeller: userModle!.name,
+        docIdProduct: docIdProduct!,
+        nameProduct: productModel!.name,
+        price: productModel!.price.toString(),
+        amount: amount!,
+        sum: (productModel!.price * int.parse(amount!)).toString());
+    print('sQLitemodel ==> ${sqLiteModel.toMap()}');
+
+    await SQLiteHelper().readAllDatabase().then((value) async{
+      if (value.isEmpty) {
+        await SQLiteHelper()
+        .insertNewValue(sqLiteModel: sqLiteModel)
+        .then((value) {
+          Navigator.pop(context);
+        });
+      } else {
+        
+        for (var item in value) {
+          sQliteModel = item;
+        }
+        print('name Seller ==> ${sQliteModel!.nameSeller}');
+
+        if (sqLiteModel.docIdSeller == sQliteModel!.docIdSeller) {
+           await SQLiteHelper()
+        .insertNewValue(sqLiteModel: sqLiteModel)
+        .then((value) {
+          Navigator.pop(context);
+        });
+        } else {
+          MyDialog(context: context).normalDialog(title: 'ขอโทษครับ กรุณาซื้อให้เสร็จทีละร้านครับ', message: 'กรุณาซื้อจากร้าน ${sQliteModel!.nameSeller} ให้เสร็จก่อน');
+        }
+
+       
+      }
+    });
+
+    
   }
 }
