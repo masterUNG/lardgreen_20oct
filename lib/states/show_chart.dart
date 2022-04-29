@@ -243,6 +243,7 @@ class _ShowChartState extends State<ShowChart> {
     for (var item in sqlModels) {
       docIdProducts.add(item.docIdProduct);
       nameProducts.add(item.nameProduct);
+      priceProducts.add(item.price);
       amountProducts.add(item.amount);
       sumProducts.add(item.sum);
     }

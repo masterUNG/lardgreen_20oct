@@ -122,6 +122,9 @@ class _AuthenState extends State<Authen> {
           .get()
           .then((value) async {
         UserModle userModle = UserModle.fromMap(value.data()!);
+
+        print('## userModel ==> ${userModle.toMap()}');
+
         switch (userModle.status) {
           case 'wait':
             await FirebaseAuth.instance.signOut().then(
