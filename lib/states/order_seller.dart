@@ -68,6 +68,7 @@ class _OrderSellerState extends State<OrderSeller> {
                   child: ShowText(lable: model.nameProducts[i]),
                 ),
                 
+               
               ],
             ));
           }
