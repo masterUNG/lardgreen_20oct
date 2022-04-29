@@ -2,17 +2,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lardgreen/models/order_product_model.dart';
-import 'package:lardgreen/utility/my_calculate.dart';
-import 'package:lardgreen/utility/my_constant.dart';
-import 'package:lardgreen/widgets/show_progress.dart';
-import 'package:lardgreen/widgets/show_text.dart';
 
-import 'package:lardgreen/widgets/show_title.dart';
+import '../models/order_product_model.dart';
+import '../models/user_model.dart';
+import '../utility/my_constant.dart';
+import '../widgets/show_progress.dart';
+import '../widgets/show_text.dart';
+import '../widgets/show_title.dart';
+
 
 class OrderSeller extends StatefulWidget {
   final String docIdUser;
-
   const OrderSeller({
     Key? key,
     required this.docIdUser,
@@ -26,6 +26,8 @@ class _OrderSellerState extends State<OrderSeller> {
   bool load = true;
   bool? haveOrder;
   var orderProductModels = <OrderProductModel>[];
+  var userModels = <UserModle>[];
+  List<List<Widget>> listWidget = [];
 
   @override
   void initState() {
@@ -34,24 +36,52 @@ class _OrderSellerState extends State<OrderSeller> {
   }
 
   Future<void> readMyOrder() async {
-
     if (orderProductModels.isNotEmpty) {
       orderProductModels.clear();
     }
+
     var user = FirebaseAuth.instance.currentUser;
     String uid = user!.uid;
-    
+    print('## uid ==> $uid');
 
     await FirebaseFirestore.instance
         .collection('order')
         .where('uidSeller', isEqualTo: uid)
         .get()
-        .then((value) {
+        .then((value) async {
       load = false;
       if (value.docs.isEmpty) {
         haveOrder = false;
       } else {
         haveOrder = true;
+
+        for (var item in value.docs) {
+          OrderProductModel model = OrderProductModel.fromMap(item.data());
+          orderProductModels.add(model);
+
+          var widgets = <Widget>[];
+          for (var i = 0; i < model.docIdProducts.length; i++) {
+            widgets.add(Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: ShowText(lable: model.nameProducts[i]),
+                ),
+                
+              ],
+            ));
+          }
+          listWidget.add(widgets);
+
+          await FirebaseFirestore.instance
+              .collection('user')
+              .doc(model.uidBuyer)
+              .get()
+              .then((value) {
+            UserModle userModle = UserModle.fromMap(value.data()!);
+            userModels.add(userModle);
+          });
+        }
       }
       setState(() {});
     });
@@ -62,12 +92,32 @@ class _OrderSellerState extends State<OrderSeller> {
     return load
         ? const ShowProgress()
         : haveOrder!
-            ? const ShowTitle(title: 'รายการสั่งซื้อ')
+            ? newContent()
             : Center(
-              child: ShowText(
-                  lable: 'ยังไม่มีรายการสั่งซื้อ',
-                  textStyle: MyConstant().h1Style(),
-                ),
-            );
+                child: ShowText(
+                lable: 'ไม่มีรายการ สั่งซื้อ',
+                textStyle: MyConstant().h1Style(),
+              ));
   }
+
+  Widget newContent() => ListView(
+        children: [
+          const ShowTitle(title: 'รายการสั่งซื่อ'),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const ScrollPhysics(),
+            itemCount: orderProductModels.length,
+            itemBuilder: (context, index) => ExpansionTile(
+              children: listWidget[index],
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ShowTitle(title: 'ผู้ซื้อ : ${userModels[index].name}'),
+                  ShowText(lable: 'สถานะ : ${orderProductModels[index].status}')
+                ],
+              ),
+            ),
+          )
+        ],
+      );
 }
