@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:lardgreen/models/user_model.dart';
 import 'package:lardgreen/states/about_me.dart';
@@ -8,6 +9,7 @@ import 'package:lardgreen/states/helper.dart';
 import 'package:lardgreen/states/home.dart';
 import 'package:lardgreen/states/show_chart.dart';
 import 'package:lardgreen/utility/my_constant.dart';
+import 'package:lardgreen/utility/my_dialog.dart';
 import 'package:lardgreen/widgets/show_icon_button.dart';
 import 'package:lardgreen/widgets/show_image.dart';
 import 'package:lardgreen/widgets/show_progress.dart';
@@ -35,6 +37,7 @@ class _MainHomeState extends State<MainHome> {
   int indexWidget = 0;
   var user = FirebaseAuth.instance.currentUser;
   UserModle? userModle;
+  String? titleMessage, bodyMessage;
 
   @override
   void initState() {
@@ -47,6 +50,28 @@ class _MainHomeState extends State<MainHome> {
     widgetBuyer.add(const Home());
 
     readDataUser();
+    processMessageing();
+  }
+
+  Future<void> processMessageing() async {
+    await FirebaseMessaging.instance.getToken().then((value) {
+      String token =value.toString();
+      print('token ==> $token');
+    });
+    // for Open App
+    FirebaseMessaging.onMessage.listen((event) {
+      titleMessage = event.notification!.title;
+      bodyMessage = event.notification!.body;
+      MyDialog(context: context)
+          .normalDialog(title: titleMessage!, message: bodyMessage!);
+    });
+
+    // for Colse App
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      titleMessage = event.notification!.title;
+      bodyMessage = event.notification!.body;
+      print('message ==> $titleMessage, $bodyMessage');
+    });
   }
 
   Future<void> readDataUser() async {
