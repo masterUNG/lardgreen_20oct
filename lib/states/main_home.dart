@@ -2,11 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:lardgreen/models/order_product_model.dart';
 import 'package:lardgreen/models/user_model.dart';
 import 'package:lardgreen/states/about_me.dart';
 import 'package:lardgreen/states/authen.dart';
 import 'package:lardgreen/states/helper.dart';
 import 'package:lardgreen/states/home.dart';
+import 'package:lardgreen/states/product_cancel_buyer.dart';
+import 'package:lardgreen/states/product_confirm_buyer.dart';
+import 'package:lardgreen/states/product_finish_buyer.dart';
+import 'package:lardgreen/states/product_order_buyer.dart';
+import 'package:lardgreen/states/product_payment_buyer.dart';
 import 'package:lardgreen/states/show_chart.dart';
 import 'package:lardgreen/utility/my_constant.dart';
 import 'package:lardgreen/utility/my_dialog.dart';
@@ -48,6 +54,11 @@ class _MainHomeState extends State<MainHome> {
     widgetGuests.add(const AboutMe());
 
     widgetBuyer.add(const Home());
+    widgetBuyer.add(const ProductOrderBuyer());
+    widgetBuyer.add(const ProductConfirmBuyer());
+    widgetBuyer.add(const ProductPaymentBuyer());
+    widgetBuyer.add(const ProductFinishBuyer());
+    widgetBuyer.add(const ProductCancelBuyer());
 
     readDataUser();
   }
@@ -222,11 +233,59 @@ class _MainHomeState extends State<MainHome> {
           ),
           ShowMenu(
             title: 'เลือกซื้อสินค้า',
-            iconData: Icons.home_outlined,
+            iconData: Icons.filter_1,
             tapFunc: () {
               Navigator.pop(context);
               setState(() {
                 indexWidget = 0;
+              });
+            },
+          ),
+          ShowMenu(
+            title: 'รายการสั่งสินค้า',
+            iconData: Icons.filter_2,
+            tapFunc: () {
+              Navigator.pop(context);
+              setState(() {
+                indexWidget = 1;
+              });
+            },
+          ),
+          ShowMenu(
+            title: 'รายการยืนยันสินค้า',
+            iconData: Icons.filter_3,
+            tapFunc: () {
+              Navigator.pop(context);
+              setState(() {
+                indexWidget = 2;
+              });
+            },
+          ),
+          ShowMenu(
+            title: 'รายการจ่ายเงิน',
+            iconData: Icons.filter_4,
+            tapFunc: () {
+              Navigator.pop(context);
+              setState(() {
+                indexWidget = 3;
+              });
+            },
+          ),ShowMenu(
+            title: 'สินค้าจัดส่งแล้ว',
+            iconData: Icons.filter_5,
+            tapFunc: () {
+              Navigator.pop(context);
+              setState(() {
+                indexWidget = 4;
+              });
+            },
+          ),ShowMenu(
+            title: 'รายการสินค้ายกเลิก',
+            iconData: Icons.filter_6,
+            tapFunc: () {
+              Navigator.pop(context);
+              setState(() {
+                indexWidget = 5;
               });
             },
           ),

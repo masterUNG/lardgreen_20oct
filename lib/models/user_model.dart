@@ -20,7 +20,7 @@ class UserModle {
     required this.status,
     required this.token,
     required this.typeUser,
-     this.urlAvatar,
+    this.urlAvatar,
   });
 
   Map<String, dynamic> toMap() {
@@ -47,7 +47,7 @@ class UserModle {
       status: map['status'] as String,
       token: map['token'] as String,
       typeUser: map['typeUser'] as String,
-      urlAvatar: (map['urlAvatar'] ?? ''),
+      urlAvatar: map['urlAvatar'] != null ? map['urlAvatar'] as String : null,
     );
   }
 
