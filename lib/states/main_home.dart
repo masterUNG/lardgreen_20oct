@@ -53,7 +53,7 @@ class _MainHomeState extends State<MainHome> {
   }
 
   Future<void> processMessageing() async {
-    await FirebaseMessaging.instance.getToken().then((value) async{
+    await FirebaseMessaging.instance.getToken().then((value) async {
       token = value.toString();
       print('token สำหรับ ผู้ซื้อ ==> $token');
 
@@ -61,7 +61,7 @@ class _MainHomeState extends State<MainHome> {
 
       map['token'] = token;
 
-     await FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection('user')
           .doc(user!.uid)
           .update(map)
@@ -221,14 +221,15 @@ class _MainHomeState extends State<MainHome> {
             ),
           ),
           ShowMenu(
-              title: 'Home',
-              iconData: Icons.home_outlined,
-              tapFunc: () {
-                Navigator.pop(context);
-                setState(() {
-                  indexWidget = 0;
-                });
-              }),
+            title: 'เลือกซื้อสินค้า',
+            iconData: Icons.home_outlined,
+            tapFunc: () {
+              Navigator.pop(context);
+              setState(() {
+                indexWidget = 0;
+              });
+            },
+          ),
           const Spacer(),
           const ShowSignOut(),
         ],
