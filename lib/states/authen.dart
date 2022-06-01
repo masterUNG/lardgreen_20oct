@@ -5,6 +5,7 @@ import 'package:lardgreen/models/user_model.dart';
 import 'package:lardgreen/states/create_new_account.dart';
 import 'package:lardgreen/utility/my_constant.dart';
 import 'package:lardgreen/utility/my_dialog.dart';
+import 'package:lardgreen/widgets/show_icon_button.dart';
 import 'package:lardgreen/widgets/show_text.dart';
 
 import '../widgets/show_button.dart';
@@ -24,6 +25,12 @@ class _AuthenState extends State<Authen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: ShowIconButton(
+            iconData: Icons.arrow_back_ios,
+            pressFunc: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, MyConstant.routeMainHome, (route) => false);
+            }),
         elevation: 0,
         foregroundColor: MyConstant.dark,
         backgroundColor: Colors.white,
@@ -142,7 +149,8 @@ class _AuthenState extends State<Authen> {
             break;
           case 'approve':
             if (userModle.typeUser == 'buyer') {
-              Navigator.pop(context);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, MyConstant.routeMainHome, (route) => false);
             } else {
               Navigator.pushNamedAndRemoveUntil(
                   context, MyConstant.routeSellerService, (route) => false);

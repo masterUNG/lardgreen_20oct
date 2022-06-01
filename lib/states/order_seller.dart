@@ -134,47 +134,60 @@ class _OrderSellerState extends State<OrderSeller> {
             itemCount: orderProductModels.length,
             itemBuilder: (context, index) => ExpansionTile(
               children: listWidget[index],
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              title: Column(
                 children: [
-                  ShowTitle(title: 'ผู้ซื้อ : ${userModels[index].name}'),
-                  ShowText(
-                      lable: 'สถานะ : ${orderProductModels[index].status}'),
-                  ShowIconButton(
-                      iconData: Icons.edit_outlined,
-                      pressFunc: () {
-                        print('you  click ==> $index');
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ShowTitle(title: 'ผู้ซื้อ : ${userModels[index].name}'),
+                      ShowText(
+                          lable: 'สถานะ : ${orderProductModels[index].status}'),
+                      orderProductModels[index].status == 'order'
+                          ? ShowIconButton(
+                              iconData: Icons.edit_outlined,
+                              pressFunc: () {
+                                print('you  click ==> $index');
 
-                        Map<String, dynamic> map = {};
-                        MyDialog(context: context).actionDialog(
-                            title: 'เลือกสถานะใหม่',
-                            message:
-                                'กรุณาเลือก ยืนยัน หรือ ยกเลิก รายการสั่งซื้อ',
-                            label1: 'ยืนยัน',
-                            label2: 'ยกเลิก',
-                            presFunc1: () {
-                              map['status'] = 'confirm';
-                              Navigator.pop(context);
-                              processChangeStatus(
-                                  docIdOrder: docIdOrders[index],
-                                  map: map,
-                                  docIdBuyer:
-                                      orderProductModels[index].uidBuyer);
-                            },
-                            presFunc2: () {
-                              map['status'] = 'cancle';
-                              Navigator.pop(context);
-                              processChangeStatus(
-                                  docIdOrder: docIdOrders[index],
-                                  map: map,
-                                  docIdBuyer:
-                                      orderProductModels[index].uidBuyer);
-                            });
-                      }),
+                                Map<String, dynamic> map = {};
+                                MyDialog(context: context).actionDialog(
+                                    title: 'เลือกสถานะใหม่',
+                                    message:
+                                        'กรุณาเลือก ยืนยัน หรือ ยกเลิก รายการสั่งซื้อ',
+                                    label1: 'ยืนยัน',
+                                    label2: 'ยกเลิก',
+                                    presFunc1: () {
+                                      map['status'] = 'confirm';
+                                      Navigator.pop(context);
+                                      processChangeStatus(
+                                          docIdOrder: docIdOrders[index],
+                                          map: map,
+                                          docIdBuyer: orderProductModels[index]
+                                              .uidBuyer);
+                                    },
+                                    presFunc2: () {
+                                      map['status'] = 'cancle';
+                                      Navigator.pop(context);
+                                      processChangeStatus(
+                                          docIdOrder: docIdOrders[index],
+                                          map: map,
+                                          docIdBuyer: orderProductModels[index]
+                                              .uidBuyer);
+                                    });
+                              },
+                            )
+                          : const SizedBox(),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      ShowTitle(title: 'สถานที่จัดส่ง'),
+                      ShowText(lable: orderProductModels[index].delivery),
+                    ],
+                  ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       );
 
@@ -199,7 +212,7 @@ class _OrderSellerState extends State<OrderSeller> {
 
         String path =
             'https://www.androidthai.in.th/bigc/noti/apiNotilardgreen.php?isAdd=true&token=$token&title=$title&body=$body';
-        
+
         await Dio().get(path).then((value) {
           readMyOrder();
         });

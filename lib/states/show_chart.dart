@@ -27,10 +27,18 @@ class _ShowChartState extends State<ShowChart> {
   bool? haveData;
   int total = 0;
 
+  String delivery = 'รพ.รัตภูมิ';
+  var deliverys = <String>[];
+
   @override
   void initState() {
     super.initState();
     readMyChart();
+    deliverys.add(delivery);
+    deliverys.add('สี่แยกคูหา');
+    deliverys.add('นาสีทอง');
+    deliverys.add('เขาพระ');
+    deliverys.add('ที่อยู่ของผุ้ซื้อ');
   }
 
   Future<void> readMyChart() async {
@@ -92,6 +100,27 @@ class _ShowChartState extends State<ShowChart> {
               ShowText(lable: sqlModels[0].nameSeller),
             ],
           ),
+          Row(
+            children: [
+              ShowTitle(title: 'สถานที่จัดส่ง :'),
+              DropdownButton<dynamic>(
+              value: delivery,
+              items: deliverys
+                  .map(
+                    (e) => DropdownMenuItem(
+                      child: ShowText(lable: e),
+                      value: e,
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                setState(() {
+                  delivery = value;
+                });
+              })
+            ],
+          ),
+          
           Divider(
             color: MyConstant.dark,
           ),
@@ -258,42 +287,38 @@ class _ShowChartState extends State<ShowChart> {
         priceProducts: priceProducts,
         amountProducts: amountProducts,
         sumProducts: sumProducts,
-        total: total.toString());
+        total: total.toString(), delivery: delivery);
 
     await FirebaseFirestore.instance
         .collection('order')
         .doc()
         .set(orderProductModel.toMap())
         .then((value) async {
-     
       //Sent Noti to Seller
       await FirebaseFirestore.instance
           .collection('user')
           .doc(sqlModels[0].docIdSeller)
           .get()
-          .then((value) async{
+          .then((value) async {
         UserModle userModle = UserModle.fromMap(value.data()!);
 
         String token = userModle.token;
         String title = 'มีการสั่งซื้อเกิดขึ้น';
         String body = 'กรุุณาดูที่ รายการสั่งซื้อ';
 
-        String path = 'https://www.androidthai.in.th/bigc/noti/apiNotilardgreen.php?isAdd=true&token=$token&title=$title&body=$body';
+        String path =
+            'https://www.androidthai.in.th/bigc/noti/apiNotilardgreen.php?isAdd=true&token=$token&title=$title&body=$body';
 
-        await Dio().get(path).then((value)async {
+        await Dio().get(path).then((value) async {
           print('Success Sent Noti');
-           // Clear Chart
-      await SQLiteHelper().deleteAllData().then((value) {
-        MyDialog(context: context).normalDialog(
-            title: 'สั่งซื้อสำเร็จ',
-            message: 'ขอบคุณที่ใช้บริการ กรุณารอ การยืนยัน จากร้านค้า');
-        readMyChart();
-      });
-
+          // Clear Chart
+          await SQLiteHelper().deleteAllData().then((value) {
+            MyDialog(context: context).normalDialog(
+                title: 'สั่งซื้อสำเร็จ',
+                message: 'ขอบคุณที่ใช้บริการ กรุณารอ การยืนยัน จากร้านค้า');
+            readMyChart();
+          });
         });
-
-
-
       });
     });
   }
