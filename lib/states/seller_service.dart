@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:lardgreen/models/user_model.dart';
+import 'package:lardgreen/states/about_bank.dart';
 import 'package:lardgreen/states/order_seller.dart';
 import 'package:lardgreen/states/product_seller.dart';
 import 'package:lardgreen/states/profile_seller.dart';
@@ -93,6 +94,7 @@ class _SellerServiceState extends State<SellerService> {
           docIdUser: user!.uid,
         ),
       );
+      widgets.add( AboutBank(uid: user!.uid,));
       setState(() {});
     });
   }
@@ -159,6 +161,16 @@ class _SellerServiceState extends State<SellerService> {
               iconData: Icons.production_quantity_limits,
               tapFunc: () {
                 indexWidget = 2;
+                Navigator.pop(context);
+                setState(() {});
+              },
+            ),
+            ShowMenu(
+              title: 'จัดการบัญชีธนาคาร',
+              subTitle: 'About Bank',
+              iconData: Icons.production_quantity_limits,
+              tapFunc: () {
+                indexWidget = 3;
                 Navigator.pop(context);
                 setState(() {});
               },

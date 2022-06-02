@@ -11,6 +11,7 @@ class ShowForm extends StatelessWidget {
   final TextInputType? textInputType;
   final bool? obscue; //encryption
   final double? width;
+  final int? maxLength;
 
   const ShowForm({
     Key? key,
@@ -20,6 +21,7 @@ class ShowForm extends StatelessWidget {
     this.textInputType,
     this.obscue,
     this.width,
+    this.maxLength,
   }) : super(key: key);
 
   @override
@@ -27,8 +29,10 @@ class ShowForm extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: 16),
       width: width ?? 250,
-      height: 40,
-      child: TextFormField(obscureText: obscue??false,
+      height: maxLength == null ? 40 : 50,
+      child: TextFormField(
+        maxLength: maxLength,
+        obscureText: obscue ?? false,
         keyboardType: textInputType ?? TextInputType.text,
         onChanged: changeFunc,
         decoration: InputDecoration(
@@ -37,7 +41,7 @@ class ShowForm extends StatelessWidget {
             color: MyConstant.dark,
           ),
           label: ShowText(lable: label),
-          contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+          contentPadding: EdgeInsets.symmetric(vertical: maxLength == null ? 4 : 8, horizontal: 16),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
               borderSide: BorderSide(color: MyConstant.dark)),

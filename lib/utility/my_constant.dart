@@ -1,6 +1,21 @@
 import 'package:flutter/material.dart';
 
 class MyConstant {
+  static List<String> nameBank = [
+    'ธกส.',
+    'กรุงเทพ',
+    'กสิกร',
+    'กรุงไทย',
+    'ไทยพานิช',
+  ];
+  static List<String> svgBanks = [
+    '/images/baac.svg',
+    '/images/bbl.svg',
+    '/images/kbank.svg',
+    '/images/ktb.svg',
+    '/images/scb.svg',
+  ];
+
   static Color primary = const Color.fromARGB(255, 72, 185, 76);
   static Color dark = const Color.fromARGB(255, 13, 51, 87); //corlor text
   static Color light = const Color.fromARGB(255, 136, 201, 138);
