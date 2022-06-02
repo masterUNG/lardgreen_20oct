@@ -1,9 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lardgreen/models/bank_model.dart';
-
 import 'package:lardgreen/utility/my_constant.dart';
 import 'package:lardgreen/utility/my_dialog.dart';
 import 'package:lardgreen/widgets/show_button.dart';
@@ -131,7 +129,7 @@ class _AddAccountBankState extends State<AddAccountBank> {
         .doc()
         .set(bankModel.toMap())
         .then((value) {
-          Navigator.pop(context);
-        });
+      Navigator.pop(context);
+    });
   }
 }

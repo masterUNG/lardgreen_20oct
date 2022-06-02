@@ -46,4 +46,9 @@ class MyConstant {
         fontSize: 14,
         fontWeight: FontWeight.w500,
       );
+      TextStyle h2ActionStyle() => TextStyle(
+        color: Colors.pink,
+        fontSize: 16,
+        fontWeight: FontWeight.w700,
+      );
 }

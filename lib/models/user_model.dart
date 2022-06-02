@@ -47,7 +47,7 @@ class UserModle {
       status: map['status'] as String,
       token: map['token'] as String,
       typeUser: map['typeUser'] as String,
-      urlAvatar: map['urlAvatar'] != null ? map['urlAvatar'] as String : null,
+      urlAvatar: (map['urlAvatar'] ?? ''),
     );
   }
 
