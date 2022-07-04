@@ -10,6 +10,7 @@ import 'package:lardgreen/widgets/show_text.dart';
 
 import '../widgets/show_button.dart';
 import '../widgets/show_form.dart';
+import '../widgets/show_image.dart';
 import '../widgets/show_text_button.dart';
 
 class Authen extends StatefulWidget {
@@ -42,8 +43,14 @@ class _AuthenState extends State<Authen> {
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                ShowImage(
+                  path: 'images/logo.png',
+                ),
+                SizedBox(
+                  height: 20,
+                ),
                 ShowText(
                   lable: 'ลงชื่อใช้งาน',
                   textStyle: MyConstant().h1Style(),
@@ -94,7 +101,7 @@ class _AuthenState extends State<Authen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const ShowText(lable: 'ไม่มีชื่อผู้ใช้งาน?'),
+                      const ShowText(lable: 'ไม่มีชื่อผู้ใช้งาน?',textStyle: TextStyle(fontSize: 16),),
                       ShowTextButton(
                         label: 'สมัครใช้งาน',
                         pressFunc: () {

@@ -20,7 +20,7 @@ class ShowTextButton extends StatelessWidget {
       onPressed: pressFunc,
       child: ShowText(
         lable: label,
-        textStyle: MyConstant().h3ActionStyle(),
+        textStyle: MyConstant().h2ActionStyle(),
       ),
     );
   }

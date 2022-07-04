@@ -10,6 +10,9 @@ import 'package:lardgreen/widgets/show_text.dart';
 
 import 'package:lardgreen/widgets/show_title.dart';
 
+import '../utility/my_dialog.dart';
+import '../widgets/show_icon_button.dart';
+
 class ProductSeller extends StatefulWidget {
   final String docIdUser;
 
@@ -113,7 +116,7 @@ class _ProductSellerState extends State<ProductSeller> {
                       Container(
                         padding: EdgeInsets.all(8),
                         width: constarints.maxWidth * 0.5 - 8,
-                        height: 120,
+                        height: 130,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,6 +134,41 @@ class _ProductSellerState extends State<ProductSeller> {
                               lable:
                                   "สต็อก ${productModels[index].stock.toString()} ${productModels[index].unit}",
                               textStyle: MyConstant().h3Style(),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ShowIconButton(
+                                    iconData: Icons.edit,
+                                    pressFunc: () {
+                                      MyDialog(context: context).actionDialog(
+                                          title: 'ยืนยันการแก้ไข',
+                                          message: 'คุณต้องการแก้ไขสินค้านี้',
+                                          label1: 'แก้ไขสินค้า',
+                                          label2: 'ยกเลิก',
+                                          presFunc1: () {
+                                            Navigator.pop(context);
+                                          },
+                                          presFunc2: () {
+                                            Navigator.pop(context);
+                                          });
+                                    }),
+                                ShowIconButton(
+                                    iconData: Icons.delete_forever,
+                                    pressFunc: () {
+                                      MyDialog(context: context).actionDialog(
+                                          title: 'ยืนยันการลบ',
+                                          message: 'คุณต้องการลบสินค้านี้',
+                                          label1: 'ลบสินค้า',
+                                          label2: 'ยกเลิก',
+                                          presFunc1: () {
+                                            Navigator.pop(context);
+                                          },
+                                          presFunc2: () {
+                                            Navigator.pop(context);
+                                          });
+                                    }),
+                              ],
                             ),
                           ],
                         ),

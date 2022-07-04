@@ -25,7 +25,7 @@ class ShowButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(primary: color ?? MyConstant.primary),
         onPressed: pressFunc,
-        child: Text(label),
+        child: Text(label,style: TextStyle(fontSize: 18),),
       ),
     );
   }

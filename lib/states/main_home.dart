@@ -14,6 +14,7 @@ import 'package:lardgreen/states/product_finish_buyer.dart';
 import 'package:lardgreen/states/product_order_buyer.dart';
 import 'package:lardgreen/states/product_payment_buyer.dart';
 import 'package:lardgreen/states/show_chart.dart';
+import 'package:lardgreen/states/user_manual.dart';
 import 'package:lardgreen/utility/my_constant.dart';
 import 'package:lardgreen/utility/my_dialog.dart';
 import 'package:lardgreen/widgets/show_icon_button.dart';
@@ -180,7 +181,12 @@ class _MainHomeState extends State<MainHome> {
               title: 'คู่มือการใช้งาน',
               iconData: Icons.manage_search_outlined,
               tapFunc: () {
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => UserManual(),
+                  ),
+                );
                 setState(() {
                   indexWidget = 1;
                 });
@@ -270,7 +276,8 @@ class _MainHomeState extends State<MainHome> {
                 indexWidget = 3;
               });
             },
-          ),ShowMenu(
+          ),
+          ShowMenu(
             title: 'สินค้าจัดส่งแล้ว',
             iconData: Icons.filter_5,
             tapFunc: () {
@@ -279,7 +286,8 @@ class _MainHomeState extends State<MainHome> {
                 indexWidget = 4;
               });
             },
-          ),ShowMenu(
+          ),
+          ShowMenu(
             title: 'รายการสินค้ายกเลิก',
             iconData: Icons.filter_6,
             tapFunc: () {
