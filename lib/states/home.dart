@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:lardgreen/models/product_model.dart';
 import 'package:lardgreen/models/user_model.dart';
 import 'package:lardgreen/states/list_product_of_seller.dart';
+import 'package:lardgreen/states/show_detail_product.dart';
 import 'package:lardgreen/utility/my_constant.dart';
 import 'package:lardgreen/widgets/show_image.dart';
 import 'package:lardgreen/widgets/show_progress.dart';
@@ -21,6 +22,8 @@ class _HomeState extends State<Home> {
   var userModels = <UserModle>[];
   var productModels = <ProductModel>[];
   var docIdUsers = <String>[];
+  var docIdProducts = <String>[];
+  String? docIdUser;
   bool load = true;
 
   @override
@@ -46,8 +49,8 @@ class _HomeState extends State<Home> {
         }
         i++;
 
-        String docIdUser = item.id;
-        docIdUsers.add(docIdUser);
+        docIdUser = item.id;
+        docIdUsers.add(docIdUser!);
         await FirebaseFirestore.instance
             .collection('user')
             .doc(docIdUser)
@@ -58,6 +61,7 @@ class _HomeState extends State<Home> {
             for (var item in value.docs) {
               ProductModel productModel = ProductModel.fromMap(item.data());
               productModels.add(productModel);
+              docIdProducts.add(item.id);
             }
           }
         });
@@ -92,17 +96,30 @@ class _HomeState extends State<Home> {
           childAspectRatio: 1,
           crossAxisSpacing: 8,
           crossAxisCount: 3),
-      itemBuilder: (BuildContext context, int index) => Card(
-        color: Color.fromARGB(255, 241, 90, 141).withOpacity(0.5),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-                width: 80,
-                height: 80,
-                child: Image.network(productModels[index].urlProduct)),
-            ShowText(lable: productModels[index].name),
-          ],
+      itemBuilder: (BuildContext context, int index) => InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ShowDetailProduct(
+                  docIdUser: docIdUser!,
+                  docIdProduct: docIdProducts[index],
+                  productModel: productModels[index]),
+            ),
+          );
+        },
+        child: Card(
+          color: Color.fromARGB(255, 241, 90, 141).withOpacity(0.5),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                  width: 80,
+                  height: 80,
+                  child: Image.network(productModels[index].urlProduct)),
+              ShowText(lable: productModels[index].name),
+            ],
+          ),
         ),
       ),
       itemCount: productModels.length,
