@@ -140,7 +140,7 @@ class _HomeState extends State<Home> {
                 height: 80,
                 child: userModels[index].urlAvatar!.isEmpty
                     ? const ShowImage(
-                        path: 'images/shop.png',
+                        path: 'images/logo.png',
                       )
                     : Image.network(
                         userModels[index].urlAvatar!,

@@ -46,6 +46,11 @@ class MyConstant {
         fontSize: 16,
         fontWeight: FontWeight.normal,
       );
+       TextStyle h5Style() => TextStyle(
+        color: Colors.white,
+        fontSize: 16,
+        fontWeight: FontWeight.normal,
+      );
   TextStyle h3ActionStyle() => TextStyle(
         color: Colors.pink,
         fontSize: 14,

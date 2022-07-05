@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:lardgreen/models/order_product_model.dart';
 import 'package:lardgreen/models/user_model.dart';
+import 'package:lardgreen/states/about.dart';
 import 'package:lardgreen/states/about_me.dart';
 import 'package:lardgreen/states/authen.dart';
 import 'package:lardgreen/states/helper.dart';
@@ -157,15 +158,15 @@ class _MainHomeState extends State<MainHome> {
           UserAccountsDrawerHeader(
             currentAccountPicture: const ShowImage(),
             decoration: BoxDecoration(
-              color: MyConstant.light.withOpacity(0.5),
+              color: MyConstant.dark.withOpacity(0.5),
             ),
             accountName: ShowText(
               lable: 'ยังไม่ได้ลงชื่อใช้งาน',
-              textStyle: MyConstant().h3Style(),
+              textStyle: MyConstant().h5Style(),
             ),
             accountEmail: ShowText(
               lable: 'กรุณาลงชื่อใช้งาน โดยคลิกที่สมาชิก',
-              textStyle: MyConstant().h3Style(),
+              textStyle: MyConstant().h5Style(),
             ),
           ),
           ShowMenu(
@@ -195,7 +196,12 @@ class _MainHomeState extends State<MainHome> {
               title: 'เกี่ยวกับ',
               iconData: Icons.album_outlined,
               tapFunc: () {
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => About(),
+                  ),
+                );
                 setState(() {
                   indexWidget = 2;
                 });
@@ -203,7 +209,7 @@ class _MainHomeState extends State<MainHome> {
           const Spacer(),
           ShowMenu(
             subTitle: 'ลงชื่อใช้งาน หรือสมัครสมาชิก',
-            title: 'สมาชิก',
+            title: 'สมาชิก Login',
             iconData: Icons.card_membership,
             tapFunc: () {
               Navigator.pushAndRemoveUntil(
