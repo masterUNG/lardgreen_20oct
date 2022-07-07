@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:lardgreen/models/order_product_model.dart';
 import 'package:lardgreen/models/user_model.dart';
 import 'package:lardgreen/states/about.dart';
-import 'package:lardgreen/states/about_me.dart';
 import 'package:lardgreen/states/authen.dart';
 import 'package:lardgreen/states/helper.dart';
 import 'package:lardgreen/states/home.dart';
@@ -53,7 +52,7 @@ class _MainHomeState extends State<MainHome> {
 
     widgetGuests.add(const Home());
     widgetGuests.add(const Helper());
-    widgetGuests.add(const AboutMe());
+    widgetGuests.add(const About());
 
     widgetBuyer.add(const Home());
     widgetBuyer.add(const ProductOrderBuyer());

@@ -5,6 +5,7 @@ import 'package:lardgreen/models/product_model.dart';
 import 'package:lardgreen/states/add_new_product.dart';
 import 'package:lardgreen/utility/my_constant.dart';
 import 'package:lardgreen/widgets/show_button.dart';
+import 'package:lardgreen/widgets/show_form.dart';
 import 'package:lardgreen/widgets/show_progress.dart';
 import 'package:lardgreen/widgets/show_text.dart';
 
@@ -30,6 +31,7 @@ class _ProductSellerState extends State<ProductSeller> {
   String? docIdUser;
   bool? haveProduct;
   var productModels = <ProductModel>[];
+  var docIdProducts = <String>[];
 
   @override
   void initState() {
@@ -41,6 +43,7 @@ class _ProductSellerState extends State<ProductSeller> {
   Future<void> readProductData() async {
     if (productModels.isNotEmpty) {
       productModels.clear();
+      docIdProducts.clear();
     }
     await FirebaseFirestore.instance
         .collection('user')
@@ -58,6 +61,7 @@ class _ProductSellerState extends State<ProductSeller> {
         for (var item in value.docs) {
           ProductModel productModel = ProductModel.fromMap(item.data());
           productModels.add(productModel);
+          docIdProducts.add(item.id);
         }
       }
 
@@ -147,6 +151,11 @@ class _ProductSellerState extends State<ProductSeller> {
                                           label1: 'แก้ไขสินค้า',
                                           label2: 'ยกเลิก',
                                           presFunc1: () {
+                                            print(
+                                                'Edit ${docIdProducts[index]}');
+                                            processEditProduct(
+                                                docIdProduct:
+                                                    docIdProducts[index]);
                                             Navigator.pop(context);
                                           },
                                           presFunc2: () {
@@ -161,7 +170,19 @@ class _ProductSellerState extends State<ProductSeller> {
                                           message: 'คุณต้องการลบสินค้านี้',
                                           label1: 'ลบสินค้า',
                                           label2: 'ยกเลิก',
-                                          presFunc1: () {
+                                          presFunc1: () async {
+                                            print(
+                                                'Click Confirm Delete docIdProduct ==> ${docIdProducts[index]}');
+
+                                            await FirebaseFirestore.instance
+                                                .collection('user')
+                                                .doc(docIdUser)
+                                                .collection('product')
+                                                .doc(docIdProducts[index])
+                                                .delete()
+                                                .then((value) {
+                                              readProductData();
+                                            });
                                             Navigator.pop(context);
                                           },
                                           presFunc2: () {
@@ -185,5 +206,23 @@ class _ProductSellerState extends State<ProductSeller> {
         );
       }),
     );
+  }
+
+  Future<void> processEditProduct({required String docIdProduct}) async {
+    await FirebaseFirestore.instance
+        .collection('user')
+        .doc(docIdUser)
+        .collection('product')
+        .doc(docIdProduct)
+        .get()
+        .then((value) {
+      ProductModel productModel = ProductModel.fromMap(value.data()!);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          content: ShowForm(label: 'ราคา', iconData: Icons.money, changeFunc: (String string){}),
+        ),
+      );
+    });
   }
 }
