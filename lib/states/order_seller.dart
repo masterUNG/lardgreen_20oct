@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lardgreen/states/check_slip.dart';
 import 'package:lardgreen/utility/my_dialog.dart';
 import 'package:lardgreen/widgets/show_icon_button.dart';
 
@@ -41,12 +42,10 @@ class _OrderSellerState extends State<OrderSeller> {
   }
 
   Future<void> readMyOrder() async {
-   
-      orderProductModels.clear();
-      docIdOrders.clear();
-      userModels.clear();
-      listWidget.clear();
-    
+    orderProductModels.clear();
+    docIdOrders.clear();
+    userModels.clear();
+    listWidget.clear();
 
     var user = FirebaseAuth.instance.currentUser;
     String uid = user!.uid;
@@ -141,8 +140,7 @@ class _OrderSellerState extends State<OrderSeller> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ShowTitle(title: 'ผู้ซื้อ:${userModels[index].name}'),
-                      ShowText(
-                          lable: orderProductModels[index].status),
+                      ShowText(lable: orderProductModels[index].status),
                       orderProductModels[index].status == 'order'
                           ? ShowIconButton(
                               iconData: Icons.edit_outlined,
@@ -189,27 +187,45 @@ class _OrderSellerState extends State<OrderSeller> {
                               : orderProductModels[index].status == statuss[2]
                                   ? ShowIconButton(
                                       iconData: Icons.attach_money_outlined,
-                                      pressFunc: () {
-                                        
+                                      pressFunc: () async {
+                                        MyDialog(context: context).actionDialog(
+                                            title: 'ตรวจสอบสลิป',
+                                            message: 'ตรวจสอบยอดเงินจาก สลิป',
+                                            label1: 'ตัดยอด',
+                                            label2: 'รอไว้ก่อน',
+                                            presFunc1: () {
+                                              Navigator.pop(context);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CheckSlip(
+                                                            docIdOrder:
+                                                                docIdOrders[
+                                                                    index]),
+                                                  )).then((value) {
+                                                readMyOrder();
+                                              });
+                                            },
+                                            presFunc2: () {
+                                              Navigator.pop(context);
+                                            });
                                       })
                                   : orderProductModels[index].status ==
                                           statuss[3]
                                       ? ShowIconButton(
                                           iconData: Icons.train_sharp,
                                           pressFunc: () {
-                                             MyDialog(context: context)
-                                                    .normalDialog(
-                                                        title: 'Delivery',
-                                                        message:
-                                                            'อยู่ระหว่างการจัดส่งสินค้า');
+                                            MyDialog(context: context).normalDialog(
+                                                title: 'Delivery',
+                                                message:
+                                                    'อยู่ระหว่างการจัดส่งสินค้า');
                                           })
                                       : orderProductModels[index].status ==
                                               statuss[4]
                                           ? ShowIconButton(
                                               iconData: Icons.face_outlined,
-                                              pressFunc: () {
-                                               
-                                              })
+                                              pressFunc: () {})
                                           : orderProductModels[index].status ==
                                                   statuss[5]
                                               ? ShowIconButton(
@@ -264,7 +280,6 @@ class _OrderSellerState extends State<OrderSeller> {
           readMyOrder();
         });
       });
-     
     });
   }
 }

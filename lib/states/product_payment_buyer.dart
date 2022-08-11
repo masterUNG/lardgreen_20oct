@@ -44,7 +44,7 @@ class _ProductPaymentBuyerState extends State<ProductPaymentBuyer> {
     await FirebaseFirestore.instance
         .collection('order')
         .where('uidBuyer', isEqualTo: user!.uid)
-        .where('status', isEqualTo: 'paymented')
+        .where('status', isEqualTo: 'delivery')
         .get()
         .then((value) async {
       if (value.docs.isEmpty) {
