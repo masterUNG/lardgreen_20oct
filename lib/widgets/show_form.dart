@@ -12,6 +12,7 @@ class ShowForm extends StatelessWidget {
   final bool? obscue; //encryption
   final double? width;
   final int? maxLength;
+  final TextEditingController? textEditingController;
 
   const ShowForm({
     Key? key,
@@ -22,6 +23,7 @@ class ShowForm extends StatelessWidget {
     this.obscue,
     this.width,
     this.maxLength,
+    this.textEditingController,
   }) : super(key: key);
 
   @override
@@ -30,7 +32,7 @@ class ShowForm extends StatelessWidget {
       margin: EdgeInsets.only(top: 16),
       width: width ?? 250,
       height: maxLength == null ? 40 : 50,
-      child: TextFormField(
+      child: TextFormField(controller: textEditingController,
         maxLength: maxLength,
         obscureText: obscue ?? false,
         keyboardType: textInputType ?? TextInputType.text,

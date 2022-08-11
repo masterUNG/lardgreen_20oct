@@ -6,8 +6,10 @@ import 'package:lardgreen/states/add_new_product.dart';
 import 'package:lardgreen/utility/my_constant.dart';
 import 'package:lardgreen/widgets/show_button.dart';
 import 'package:lardgreen/widgets/show_form.dart';
+import 'package:lardgreen/widgets/show_image.dart';
 import 'package:lardgreen/widgets/show_progress.dart';
 import 'package:lardgreen/widgets/show_text.dart';
+import 'package:lardgreen/widgets/show_text_button.dart';
 
 import 'package:lardgreen/widgets/show_title.dart';
 
@@ -99,7 +101,7 @@ class _ProductSellerState extends State<ProductSeller> {
       child: LayoutBuilder(builder: (context, constarints) {
         return Column(
           children: [
-            ShowTitle(title: 'จัดการสินค้า'),
+            const ShowTitle(title: 'จัดการสินค้า'),
             ListView.builder(
               shrinkWrap: true,
               physics: ScrollPhysics(),
@@ -217,10 +219,74 @@ class _ProductSellerState extends State<ProductSeller> {
         .get()
         .then((value) {
       ProductModel productModel = ProductModel.fromMap(value.data()!);
+
+      TextEditingController priceController = TextEditingController();
+      TextEditingController stockController = TextEditingController();
+
+      priceController.text = productModel.price.toString();
+      stockController.text = productModel.stock.toString();
+
       showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          content: ShowForm(label: 'ราคา', iconData: Icons.money, changeFunc: (String string){}),
+          title: ListTile(
+            leading: SizedBox(
+              width: 70,
+              child: ShowImage(),
+            ),
+            title: ShowText(
+              lable: productModel.name,
+              textStyle: MyConstant().h2Style(),
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ShowForm(
+                  textInputType: TextInputType.number,
+                  textEditingController: priceController,
+                  label: 'ราคา',
+                  iconData: Icons.money,
+                  changeFunc: (String string) {}),
+              ShowForm(
+                  textInputType: TextInputType.number,
+                  textEditingController: stockController,
+                  label: 'สต็อก',
+                  iconData: Icons.gif_box,
+                  changeFunc: (String string) {}),
+            ],
+          ),
+          actions: [
+            ShowTextButton(
+              label: 'แก้ไข',
+              pressFunc: () async {
+                Navigator.pop(context);
+
+                int newPrice = double.parse(priceController.text).toInt();
+                int newStock = double.parse(stockController.text).toInt();
+
+                Map<String, dynamic> map = productModel.toMap();
+                map['price'] = newPrice;
+                map['stock'] = newStock;
+
+                await FirebaseFirestore.instance
+                    .collection('user')
+                    .doc(docIdUser)
+                    .collection('product')
+                    .doc(docIdProduct)
+                    .update(map)
+                    .then((value) {
+                      readProductData();
+                    });
+              },
+            ),
+            ShowTextButton(
+              label: 'ยกเลิก',
+              pressFunc: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
         ),
       );
     });
