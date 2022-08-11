@@ -31,9 +31,10 @@ class MyDialog {
         actions: [
           ShowTextButton(
             label: 'OK',
-            pressFunc: presFunc ??() {
-              Navigator.pop(context);
-            },
+            pressFunc: presFunc ??
+                () {
+                  Navigator.pop(context);
+                },
           ),
         ],
       ),
@@ -45,9 +46,10 @@ class MyDialog {
     required String message,
     required String label1,
     required String label2,
-   required Function() presFunc1,
-   required Function() presFunc2,
-   Widget? contentWidget,
+    required Function() presFunc1,
+    required Function() presFunc2,
+    bool? cancleButton,
+    Widget? contentWidget,
   }) async {
     showDialog(
       context: context,
@@ -59,7 +61,8 @@ class MyDialog {
             textStyle: MyConstant().h2Style(),
           ),
           subtitle: ShowText(lable: message),
-        ),content: contentWidget ?? const SizedBox(),
+        ),
+        content: contentWidget ?? const SizedBox(),
         actions: [
           ShowTextButton(
             label: label1,
@@ -69,6 +72,15 @@ class MyDialog {
             label: label2,
             pressFunc: presFunc2,
           ),
+          cancleButton == null
+              ? const SizedBox()
+              : cancleButton
+                  ? ShowTextButton(
+                      label: 'ปิดหน้าต่าง',
+                      pressFunc: () {
+                        Navigator.pop(context);
+                      })
+                  : const SizedBox(),
         ],
       ),
     );

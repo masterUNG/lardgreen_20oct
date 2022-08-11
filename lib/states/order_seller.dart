@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, avoid_print
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,6 +32,8 @@ class _OrderSellerState extends State<OrderSeller> {
   List<List<Widget>> listWidget = [];
   var docIdOrders = <String>[];
 
+  final statuss = MyConstant.statuss;
+
   @override
   void initState() {
     super.initState();
@@ -39,12 +41,12 @@ class _OrderSellerState extends State<OrderSeller> {
   }
 
   Future<void> readMyOrder() async {
-    if (orderProductModels.isNotEmpty) {
+   
       orderProductModels.clear();
       docIdOrders.clear();
       userModels.clear();
       listWidget.clear();
-    }
+    
 
     var user = FirebaseAuth.instance.currentUser;
     String uid = user!.uid;
@@ -64,7 +66,6 @@ class _OrderSellerState extends State<OrderSeller> {
         for (var item in value.docs) {
           OrderProductModel model = OrderProductModel.fromMap(item.data());
           orderProductModels.add(model);
-
           docIdOrders.add(item.id);
 
           var widgets = <Widget>[];
@@ -139,43 +140,87 @@ class _OrderSellerState extends State<OrderSeller> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ShowTitle(title: 'ผู้ซื้อ : ${userModels[index].name}'),
+                      ShowTitle(title: 'ผู้ซื้อ:${userModels[index].name}'),
                       ShowText(
-                          lable: 'สถานะ : ${orderProductModels[index].status}'),
+                          lable: 'สถานะ:${orderProductModels[index].status}'),
                       orderProductModels[index].status == 'order'
                           ? ShowIconButton(
                               iconData: Icons.edit_outlined,
                               pressFunc: () {
-                                print('you  click ==> $index');
+                                // print('you  click ==> $index');
 
                                 Map<String, dynamic> map = {};
                                 MyDialog(context: context).actionDialog(
-                                    title: 'เลือกสถานะใหม่',
-                                    message:
-                                        'กรุณาเลือก ยืนยัน หรือ ยกเลิก รายการสั่งซื้อ',
-                                    label1: 'ยืนยัน',
-                                    label2: 'ยกเลิก',
-                                    presFunc1: () {
-                                      map['status'] = 'confirm';
-                                      Navigator.pop(context);
-                                      processChangeStatus(
-                                          docIdOrder: docIdOrders[index],
-                                          map: map,
-                                          docIdBuyer: orderProductModels[index]
-                                              .uidBuyer);
-                                    },
-                                    presFunc2: () {
-                                      map['status'] = 'cancle';
-                                      Navigator.pop(context);
-                                      processChangeStatus(
-                                          docIdOrder: docIdOrders[index],
-                                          map: map,
-                                          docIdBuyer: orderProductModels[index]
-                                              .uidBuyer);
-                                    });
+                                  cancleButton: true,
+                                  title: 'เลือกสถานะใหม่',
+                                  message:
+                                      'กรุณาเลือก แจ้งชำระสินค้า หรือ ยกเลิกคำสั่งซื้อ',
+                                  label1: 'แจ้งชำระสินค้า',
+                                  label2: 'ยกเลิกคำสั่งซื้อ',
+                                  presFunc1: () {
+                                    map['status'] = 'confirm';
+                                    Navigator.pop(context);
+                                    processChangeStatus(
+                                        docIdOrder: docIdOrders[index],
+                                        map: map,
+                                        docIdBuyer:
+                                            orderProductModels[index].uidBuyer);
+                                  },
+                                  presFunc2: () {
+                                    map['status'] = 'cancel';
+                                    Navigator.pop(context);
+                                    processChangeStatus(
+                                        docIdOrder: docIdOrders[index],
+                                        map: map,
+                                        docIdBuyer:
+                                            orderProductModels[index].uidBuyer);
+                                  },
+                                );
                               },
                             )
-                          : const SizedBox(),
+                          : orderProductModels[index].status == statuss[1]
+                              ? ShowIconButton(
+                                  iconData: Icons.money,
+                                  pressFunc: () {
+                                    MyDialog(context: context).normalDialog(
+                                        title: 'สถาณะ Payment',
+                                        message: 'รอให้ ลูกค้าชำระสินค้าก่อน');
+                                  })
+                              : orderProductModels[index].status == statuss[2]
+                                  ? ShowIconButton(
+                                      iconData: Icons.attach_money_outlined,
+                                      pressFunc: () {})
+                                  : orderProductModels[index].status ==
+                                          statuss[3]
+                                      ? ShowIconButton(
+                                          iconData: Icons.train_sharp,
+                                          pressFunc: () {
+                                             MyDialog(context: context)
+                                                    .normalDialog(
+                                                        title: 'Delivery',
+                                                        message:
+                                                            'อยู่ระหว่างการจัดส่งสินค้า');
+                                          })
+                                      : orderProductModels[index].status ==
+                                              statuss[4]
+                                          ? ShowIconButton(
+                                              iconData: Icons.face_outlined,
+                                              pressFunc: () {
+                                               
+                                              })
+                                          : orderProductModels[index].status ==
+                                                  statuss[5]
+                                              ? ShowIconButton(
+                                                  iconData: Icons.cancel,
+                                                  pressFunc: () {
+                                                    MyDialog(context: context)
+                                                        .normalDialog(
+                                                            title:
+                                                                'ยกเลิกสินค้า',
+                                                            message:
+                                                                'สินค้านี่ยกเลิกไปแล้ว');
+                                                  })
+                                              : const SizedBox(),
                     ],
                   ),
                   Row(
@@ -217,7 +262,7 @@ class _OrderSellerState extends State<OrderSeller> {
           readMyOrder();
         });
       });
-      readMyOrder();
+     
     });
   }
 }

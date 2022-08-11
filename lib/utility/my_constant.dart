@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
 class MyConstant {
+  static List<String> statuss = [
+    'order',
+    'payment',
+    'paymented',
+    'delivery',
+    'finish',
+    'cancel',
+  ];
   static List<String> nameBank = [
     'ธกส.',
     'กรุงเทพ',
@@ -41,12 +49,12 @@ class MyConstant {
         fontSize: 14,
         fontWeight: FontWeight.normal,
       );
-      TextStyle h4Style() => TextStyle(
+  TextStyle h4Style() => TextStyle(
         color: dark,
         fontSize: 16,
         fontWeight: FontWeight.normal,
       );
-       TextStyle h5Style() => TextStyle(
+  TextStyle h5Style() => TextStyle(
         color: Colors.white,
         fontSize: 16,
         fontWeight: FontWeight.normal,
@@ -56,7 +64,7 @@ class MyConstant {
         fontSize: 14,
         fontWeight: FontWeight.w500,
       );
-      TextStyle h2ActionStyle() => TextStyle(
+  TextStyle h2ActionStyle() => TextStyle(
         color: Colors.pink,
         fontSize: 16,
         fontWeight: FontWeight.w700,
