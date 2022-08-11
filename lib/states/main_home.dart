@@ -300,7 +300,7 @@ class _MainHomeState extends State<MainHome> {
               },
             ),
             ShowMenu(
-              title: 'รับสินค้าแล้ว',
+              title: 'รายการส่งของสำเร็จ',
               subTitle: 'Status Finish',
               iconData: Icons.filter_6,
               tapFunc: () {
