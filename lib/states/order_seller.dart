@@ -142,7 +142,7 @@ class _OrderSellerState extends State<OrderSeller> {
                     children: [
                       ShowTitle(title: 'ผู้ซื้อ:${userModels[index].name}'),
                       ShowText(
-                          lable: 'สถานะ:${orderProductModels[index].status}'),
+                          lable: orderProductModels[index].status),
                       orderProductModels[index].status == 'order'
                           ? ShowIconButton(
                               iconData: Icons.edit_outlined,
@@ -158,7 +158,7 @@ class _OrderSellerState extends State<OrderSeller> {
                                   label1: 'แจ้งชำระสินค้า',
                                   label2: 'ยกเลิกคำสั่งซื้อ',
                                   presFunc1: () {
-                                    map['status'] = 'confirm';
+                                    map['status'] = statuss[1];
                                     Navigator.pop(context);
                                     processChangeStatus(
                                         docIdOrder: docIdOrders[index],
@@ -167,7 +167,7 @@ class _OrderSellerState extends State<OrderSeller> {
                                             orderProductModels[index].uidBuyer);
                                   },
                                   presFunc2: () {
-                                    map['status'] = 'cancel';
+                                    map['status'] = statuss[5];
                                     Navigator.pop(context);
                                     processChangeStatus(
                                         docIdOrder: docIdOrders[index],
@@ -189,7 +189,9 @@ class _OrderSellerState extends State<OrderSeller> {
                               : orderProductModels[index].status == statuss[2]
                                   ? ShowIconButton(
                                       iconData: Icons.attach_money_outlined,
-                                      pressFunc: () {})
+                                      pressFunc: () {
+                                        
+                                      })
                                   : orderProductModels[index].status ==
                                           statuss[3]
                                       ? ShowIconButton(

@@ -139,7 +139,7 @@ class _UploadSlipState extends State<UploadSlip> {
             .set(slipModel.toMap())
             .then((value) async {
           Map<String, dynamic> map = {};
-          map['status'] = 'payment';
+          map['status'] = 'paymented';
           await FirebaseFirestore.instance
               .collection('order')
               .doc(docIdOrder)

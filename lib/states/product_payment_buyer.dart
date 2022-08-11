@@ -44,7 +44,7 @@ class _ProductPaymentBuyerState extends State<ProductPaymentBuyer> {
     await FirebaseFirestore.instance
         .collection('order')
         .where('uidBuyer', isEqualTo: user!.uid)
-        .where('status', isEqualTo: 'payment')
+        .where('status', isEqualTo: 'paymented')
         .get()
         .then((value) async {
       if (value.docs.isEmpty) {
@@ -88,7 +88,7 @@ class _ProductPaymentBuyerState extends State<ProductPaymentBuyer> {
       child: Column(
         children: [
           ShowText(
-            lable: 'รายการจ่ายเงิน',
+            lable: 'สินค้าที่รอรับ',
             textStyle: MyConstant().h1Style(),
           ),
           ListView.builder(

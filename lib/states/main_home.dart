@@ -13,6 +13,7 @@ import 'package:lardgreen/states/product_confirm_buyer.dart';
 import 'package:lardgreen/states/product_finish_buyer.dart';
 import 'package:lardgreen/states/product_order_buyer.dart';
 import 'package:lardgreen/states/product_payment_buyer.dart';
+import 'package:lardgreen/states/product_paymented_buyer.dart';
 import 'package:lardgreen/states/show_chart.dart';
 import 'package:lardgreen/states/user_manual.dart';
 import 'package:lardgreen/utility/my_constant.dart';
@@ -57,6 +58,7 @@ class _MainHomeState extends State<MainHome> {
     widgetBuyer.add(const Home());
     widgetBuyer.add(const ProductOrderBuyer());
     widgetBuyer.add(const ProductConfirmBuyer());
+    widgetBuyer.add(const ProductPaymentedBuyer());
     widgetBuyer.add(const ProductPaymentBuyer());
     widgetBuyer.add(const ProductFinishBuyer());
     widgetBuyer.add(const ProductCancelBuyer());
@@ -226,85 +228,102 @@ class _MainHomeState extends State<MainHome> {
 
   Drawer drawerBuyer(BuildContext context) {
     return Drawer(
-      child: Column(
-        children: [
-          UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-              color: MyConstant.light.withOpacity(0.5),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                color: MyConstant.light.withOpacity(0.5),
+              ),
+              currentAccountPicture: ShowImage(),
+              accountName: ShowText(
+                lable: userModle!.name,
+                textStyle: MyConstant().h2Style(),
+              ),
+              accountEmail: ShowText(
+                lable: userModle!.email,
+                textStyle: MyConstant().h3Style(),
+              ),
             ),
-            currentAccountPicture: ShowImage(),
-            accountName: ShowText(
-              lable: userModle!.name,
-              textStyle: MyConstant().h2Style(),
+            ShowMenu(
+              title: 'เลือกซื้อสินค้า',
+              iconData: Icons.filter_1,
+              tapFunc: () {
+                Navigator.pop(context);
+                setState(() {
+                  indexWidget = 0;
+                });
+              },
             ),
-            accountEmail: ShowText(
-              lable: userModle!.email,
-              textStyle: MyConstant().h3Style(),
+            ShowMenu(
+              title: 'รายการสั่งสินค้า',
+              subTitle: 'Status Order',
+              iconData: Icons.filter_2,
+              tapFunc: () {
+                Navigator.pop(context);
+                setState(() {
+                  indexWidget = 1;
+                });
+              },
             ),
-          ),
-          ShowMenu(
-            title: 'เลือกซื้อสินค้า',
-            iconData: Icons.filter_1,
-            tapFunc: () {
-              Navigator.pop(context);
-              setState(() {
-                indexWidget = 0;
-              });
-            },
-          ),
-          ShowMenu(
-            title: 'รายการสั่งสินค้า',
-            iconData: Icons.filter_2,
-            tapFunc: () {
-              Navigator.pop(context);
-              setState(() {
-                indexWidget = 1;
-              });
-            },
-          ),
-          ShowMenu(
-            title: 'รายการยืนยันสินค้า',
-            iconData: Icons.filter_3,
-            tapFunc: () {
-              Navigator.pop(context);
-              setState(() {
-                indexWidget = 2;
-              });
-            },
-          ),
-          ShowMenu(
-            title: 'รายการจ่ายเงิน',
-            iconData: Icons.filter_4,
-            tapFunc: () {
-              Navigator.pop(context);
-              setState(() {
-                indexWidget = 3;
-              });
-            },
-          ),
-          ShowMenu(
-            title: 'สินค้าจัดส่งแล้ว',
-            iconData: Icons.filter_5,
-            tapFunc: () {
-              Navigator.pop(context);
-              setState(() {
-                indexWidget = 4;
-              });
-            },
-          ),
-          ShowMenu(
-            title: 'รายการสินค้ายกเลิก',
-            iconData: Icons.filter_6,
-            tapFunc: () {
-              Navigator.pop(context);
-              setState(() {
-                indexWidget = 5;
-              });
-            },
-          ),
-          const Spacer(),
-          const ShowSignOut(),
-        ],
+            ShowMenu(
+              title: 'รายการรอชำระสินค้า',
+              subTitle: 'Status Payment',
+              iconData: Icons.filter_3,
+              tapFunc: () {
+                Navigator.pop(context);
+                setState(() {
+                  indexWidget = 2;
+                });
+              },
+            ),
+            ShowMenu(
+              title: 'รายการจ่ายเงินแล้ว',
+              subTitle: 'Status Paymented',
+              iconData: Icons.filter_4,
+              tapFunc: () {
+                Navigator.pop(context);
+                setState(() {
+                  indexWidget = 3;
+                });
+              },
+            ),
+            ShowMenu(
+              title: 'สินค้าที่รอรับ',
+              subTitle: 'Status Delivery',
+              iconData: Icons.filter_5,
+              tapFunc: () {
+                Navigator.pop(context);
+                setState(() {
+                  indexWidget = 4;
+                });
+              },
+            ),
+            ShowMenu(
+              title: 'รับสินค้าแล้ว',
+              subTitle: 'Status Finish',
+              iconData: Icons.filter_6,
+              tapFunc: () {
+                Navigator.pop(context);
+                  setState(() {
+                  indexWidget = 5;
+                });
+              },
+            ),
+            ShowMenu(
+              title: 'รายการสินค้ายกเลิก',
+              subTitle: 'Status Cancel',
+              iconData: Icons.filter_7,
+              tapFunc: () {
+                Navigator.pop(context);
+                setState(() {
+                  indexWidget = 6;
+                });
+              },
+            ),
+            const ShowSignOut(),
+          ],
+        ),
       ),
     );
   }

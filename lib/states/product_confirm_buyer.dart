@@ -48,7 +48,7 @@ class _ProductConfirmBuyerState extends State<ProductConfirmBuyer> {
     await FirebaseFirestore.instance
         .collection('order')
         .where('uidBuyer', isEqualTo: user!.uid)
-        .where('status', isEqualTo: 'confirm')
+        .where('status', isEqualTo: 'payment')
         .get()
         .then((value) async {
       if (value.docs.isEmpty) {
@@ -122,7 +122,7 @@ class _ProductConfirmBuyerState extends State<ProductConfirmBuyer> {
       child: Column(
         children: [
           ShowText(
-            lable: 'รายการยืนยันสินค้า',
+            lable: 'รายการสินค้ารอชำระ',
             textStyle: MyConstant().h1Style(),
           ),
           ListView.builder(
