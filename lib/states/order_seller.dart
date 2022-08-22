@@ -32,6 +32,7 @@ class _OrderSellerState extends State<OrderSeller> {
   var userModels = <UserModle>[];
   List<List<Widget>> listWidget = [];
   var docIdOrders = <String>[];
+  int totalsum = 0;
 
   final statuss = MyConstant.statuss;
 
@@ -68,7 +69,35 @@ class _OrderSellerState extends State<OrderSeller> {
           docIdOrders.add(item.id);
 
           var widgets = <Widget>[];
+          widgets.add(
+            Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: ShowText(lable: 'สินค้า'),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: ShowText(lable: 'ราคา'),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: ShowText(lable: 'จำนวน'),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: ShowText(lable: 'รวม'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
           for (var i = 0; i < model.docIdProducts.length; i++) {
+            //totalsum = totalsum + int.parse(model.sumProducts[i]);
+            // print('totalsum ==> ${totalsum}');
             widgets.add(
               Column(
                 children: [
@@ -140,7 +169,7 @@ class _OrderSellerState extends State<OrderSeller> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ShowTitle(title: 'ผู้ซื้อ:${userModels[index].name}'),
-                      ShowText(lable: orderProductModels[index].status),
+                      ShowText(lable: statusThai(index)),
                       orderProductModels[index].status == 'order'
                           ? ShowIconButton(
                               iconData: Icons.edit_outlined,
@@ -243,6 +272,12 @@ class _OrderSellerState extends State<OrderSeller> {
                   ),
                   Row(
                     children: [
+                      ShowTitle(title: 'โทร:'),
+                      ShowText(lable: userModels[index].phone),
+                    ],
+                  ),
+                  Row(
+                    children: [
                       ShowTitle(title: 'สถานที่จัดส่ง'),
                       ShowText(lable: orderProductModels[index].delivery),
                     ],
@@ -254,6 +289,30 @@ class _OrderSellerState extends State<OrderSeller> {
         ],
       );
 
+  String statusThai(int index){
+    String thaista='สั่งสินค้า';
+    if (orderProductModels[index].status=='order') {
+        thaista='สั่งสินค้า';
+    } else if (orderProductModels[index].status=='payment') {
+        thaista='ชำระเงิน';
+    }else if (orderProductModels[index].status=='paymented') {
+        thaista='จ่ายเงินแล้ว';
+    }else if (orderProductModels[index].status=='delivery') {
+        thaista='ส่งของ';
+    }else if (orderProductModels[index].status=='finish') {
+        thaista='รับของแล้ว';
+    }else{
+        thaista='ยกเลิก';
+    }
+    
+    return thaista;
+  } 
+// 'order',
+//     'payment',
+//     'paymented',
+//     'delivery',
+//     'finish',
+//     'cancel',
   Future<void> processChangeStatus(
       {required String docIdOrder,
       required Map<String, dynamic> map,

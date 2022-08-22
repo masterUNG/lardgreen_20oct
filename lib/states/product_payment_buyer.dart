@@ -99,7 +99,7 @@ class _ProductPaymentBuyerState extends State<ProductPaymentBuyer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ShowText(
-                  lable: 'ร้าน : ${sellerUserModels[index].name}',
+                  lable: 'ร้าน : ${sellerUserModels[index].name} โทร: ${sellerUserModels[index].phone}',
                   textStyle: MyConstant().h2Style(),
                 ),
                 ShowText(lable: dateOrders[index]),

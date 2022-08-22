@@ -182,7 +182,7 @@ class _HomeState extends State<Home> {
       width: Constraints.maxWidth,
       height: 150,
       child: ShowText(
-        lable: 'Banner',
+        lable: 'หลาดกรีนปั้นสุข',
         textStyle: MyConstant().h1Style(),
       ),
     );
