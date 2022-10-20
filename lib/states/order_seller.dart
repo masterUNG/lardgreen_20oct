@@ -307,12 +307,7 @@ class _OrderSellerState extends State<OrderSeller> {
     
     return thaista;
   } 
-// 'order',
-//     'payment',
-//     'paymented',
-//     'delivery',
-//     'finish',
-//     'cancel',
+  
   Future<void> processChangeStatus(
       {required String docIdOrder,
       required Map<String, dynamic> map,

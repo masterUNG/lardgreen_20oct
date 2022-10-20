@@ -99,7 +99,11 @@ class _ProductPaymentBuyerState extends State<ProductPaymentBuyer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ShowText(
-                  lable: 'ร้าน : ${sellerUserModels[index].name} โทร: ${sellerUserModels[index].phone}',
+                  lable: 'ร้าน : ${sellerUserModels[index].name}',
+                  textStyle: MyConstant().h2Style(),
+                ),
+                ShowText(
+                  lable: 'โทร: ${sellerUserModels[index].phone}',
                   textStyle: MyConstant().h2Style(),
                 ),
                 ShowText(lable: dateOrders[index]),
@@ -221,8 +225,8 @@ class _ProductPaymentBuyerState extends State<ProductPaymentBuyer> {
               body: 'ของคุณมากครับ',
               token: userModle.token)
           .then((value) {
-            readOrderProduct();
-          });
+        readOrderProduct();
+      });
     });
   }
 }

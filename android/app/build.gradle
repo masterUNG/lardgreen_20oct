@@ -52,8 +52,8 @@ def keystoreProperties = new Properties()
         applicationId "com.wanpracha.lardgreen"
         minSdkVersion 22
         targetSdkVersion 30
-        versionCode 4
-        versionName '4.0.0'
+        versionCode 5
+        versionName '5.0.0'
     }
 
        signingConfigs {
