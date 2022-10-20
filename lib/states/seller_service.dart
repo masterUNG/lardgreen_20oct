@@ -117,7 +117,7 @@ class _SellerServiceState extends State<SellerService> {
           children: [
             UserAccountsDrawerHeader(
               currentAccountPicture: userModle == null
-                  ? SizedBox(
+                  ? const SizedBox(
                       child: ShowImage(),
                     )
                   : userModle!.urlAvatar!.isEmpty
