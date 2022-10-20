@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 100),
+        margin: const EdgeInsets.symmetric(horizontal: 100),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

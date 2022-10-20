@@ -100,7 +100,7 @@ class _MainHomeState extends State<MainHome> {
   }
 
   Future<void> readDataUser() async {
-    await FirebaseAuth.instance.authStateChanges().listen((event) async {
+    FirebaseAuth.instance.authStateChanges().listen((event) async {
       if (event == null) {
         logined = false;
         widgets = widgetGuests;

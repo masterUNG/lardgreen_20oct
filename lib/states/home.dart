@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:lardgreen/models/product_model.dart';
+import 'package:lardgreen/models/promotion_model.dart';
 import 'package:lardgreen/models/user_model.dart';
 import 'package:lardgreen/states/list_product_of_seller.dart';
 import 'package:lardgreen/states/show_detail_product.dart';
-import 'package:lardgreen/utility/my_constant.dart';
 import 'package:lardgreen/widgets/show_image.dart';
 import 'package:lardgreen/widgets/show_progress.dart';
 import 'package:lardgreen/widgets/show_text.dart';
@@ -25,10 +26,14 @@ class _HomeState extends State<Home> {
   String? docIdUser;
   bool load = true;
 
+  var promotionModels = <PromotionModel>[];
+  var widgetPromotions = <Widget>[];
+
   @override
   void initState() {
     super.initState();
     readAllSeller();
+    readAllBanner();
   }
 
   Future<void> readAllSeller() async {
@@ -169,21 +174,46 @@ class _HomeState extends State<Home> {
         ),
       ),
       itemCount: userModels.length,
-      physics: ScrollPhysics(),
+      physics: const ScrollPhysics(),
       shrinkWrap: true,
     );
   }
 
-  Container newBanner(BoxConstraints Constraints) {
-    return Container(
-      decoration: BoxDecoration(color: MyConstant.light.withOpacity(0.75)),
-      alignment: Alignment.center,
-      width: Constraints.maxWidth,
-      height: 150,
-      child: ShowText(
-        lable: 'หลาดกรีนปั้นสุข',
-        textStyle: MyConstant().h1Style(),
-      ),
-    );
+  Widget newBanner(BoxConstraints constraints) {
+    return productModels.isEmpty
+        ? const ShowProgress()
+        : ImageSlideshow(
+            autoPlayInterval: 5000,
+            isLoop: true,
+            height: 150,
+            children: widgetPromotions,
+          );
+  }
+
+  Future<void> readAllBanner() async {
+    await FirebaseFirestore.instance
+        .collection('promotion')
+        .orderBy('timeAdd', descending: true)
+        .get()
+        .then((value) {
+          int amount = 0;
+      for (var element in value.docs) {
+        PromotionModel promotionModel = PromotionModel.fromMap(element.data());
+        promotionModels.add(promotionModel);
+
+        
+        if (amount <= 3) {
+          widgetPromotions.add(
+            Image.network(
+              promotionModel.url,
+              fit: BoxFit.cover,
+            ),
+          );
+          amount++;
+        }
+      }
+      print('ขนาดของ widgetPromotions ==> ${widgetPromotions.length}');
+      setState(() {});
+    });
   }
 }
