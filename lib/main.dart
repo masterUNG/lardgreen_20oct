@@ -30,7 +30,7 @@ Future<void> main() async {
       runApp(const MyApp());
     } else {
       firstPage = MyConstant.routeMainHome;
-      await FirebaseAuth.instance.authStateChanges().listen((event) async {
+      FirebaseAuth.instance.authStateChanges().listen((event) async {
         if (event != null) {
           String uid = event.uid;
           await FirebaseFirestore.instance
